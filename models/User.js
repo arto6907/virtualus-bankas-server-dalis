@@ -11,11 +11,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Slaptažodis yra privalomas'],
     minlength: [8, 'Slaptažodis turi būti bent 8 simbolių']
+  },
+  photo: {
+    type: String,
+    default: null
   }
 }, {
   timestamps: true
 });
 
 const User = mongoose.model('User', userSchema);
-
 export default User;
