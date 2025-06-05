@@ -1,0 +1,84 @@
+# 🖥️ Virtualus Bankas – serverio (Express + MongoDB) pusė
+
+Tai yra **„Virtualus bankas“** Node.js serverio pusė, sukurta naudojant Express ir MongoDB. Ji teikia REST API React klientui, kuris leidžia administruoti banko sąskaitas.
+
+---
+
+## 📁 Projekto struktūra (sutrumpinta)
+
+```
+server/
+├── config/              → DB prisijungimas (db.js)
+├── controllers/         → API logika (accountController, authController)
+├── middleware/          → (nebūtina, bet galima skirti multer ar auth)
+├── models/              → Mongoose modeliai (Account, User)
+├── routes/              → API maršrutai (accountsRoutes, authRoutes)
+├── uploads/             → Įkeltos vartotojų nuotraukos
+├── .env                 → Konfigūracijos (DB URL, PORT, kt.)
+├── package.json         → Priklausomybės, script'ai
+└── server.js            → Pagrindinis starto failas
+```
+
+---
+
+## 🧠 API funkcionalumas
+
+### ✅ Sąskaitų maršrutai (`/api/accounts`):
+- `GET /` – gauti visas sąskaitas
+- `POST /` – sukurti naują sąskaitą (su nuotrauka)
+- `GET /:id` – gauti vieną sąskaitą
+- `DELETE /:id` – ištrinti sąskaitą
+- `PATCH /add/:id` – pridėti lėšų
+- `POST /withdraw/:id` – nurašyti lėšas
+
+### 🔐 Naudotojų autentifikacija (`/api/auth`):
+- `POST /register` – registracija su nuotrauka
+- `POST /login` – prisijungimas
+
+---
+
+## ⚙️ Paleidimas lokaliai
+
+### 1. Įdiegti priklausomybes
+```bash
+npm install
+```
+
+### 2. `.env` failas
+```env
+PORT=3001
+MONGO_URL=mongodb://localhost:27017/virtualusbankas
+```
+
+### 3. Paleisti su nodemon
+```bash
+npm run dev
+```
+
+Jei nori paleisti be nodemon:
+```bash
+npm start
+```
+
+---
+
+## 🧾 Priklausomybės
+- **express** – API serveris
+- **mongoose** – DB sąveikai
+- **dotenv** – paslėptiems kintamiesiems
+- **multer** – failų įkėlimui (nuotraukoms)
+- **bcrypt** – slaptažodžių šifravimui
+- **cors** – leisti kliento užklausas
+- **nodemon** – auto perkrovimas (tik `dev` aplinkai)
+
+---
+
+## 🖼️ Nuotraukų įkėlimas
+Įkeliant sąskaitą ar vartotoją naudojamas `multer`, kuris saugo nuotraukas į `/uploads` aplanką.
+
+---
+
+## 👨‍💻 Autorius
+Baigiamojo darbo studentas: **Artūras Mikalkėnas**
+
+Jei reikia papildyti apie autentifikaciją, slaptažodžių šifravimą, IBAN generavimą ar duomenų validaciją – parašyk, papildysiu.
