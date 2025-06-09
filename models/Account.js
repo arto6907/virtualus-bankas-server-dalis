@@ -8,6 +8,7 @@ const accountSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  password: String,
   image: String,
   iban: String,
   balance: {

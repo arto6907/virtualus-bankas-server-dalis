@@ -12,29 +12,31 @@ import {
   withdrawFunds,
 } from '../controllers/accountController.js';
 
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
 
-// Upload aplanko kūrimas
+// 📁 Jei trūksta 'uploads' aplanko – sukuria
 const uploadDir = './uploads';
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Multer konfiguracija
+// Multer konfigūracija
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
 });
 const upload = multer({ storage });
 
-// POST su nuotrauka
-router.post('/', upload.single('photo'), createAccount);
+// ✅ Apsaugoti route'ai su token tikrinimu
+router.get('/', authenticateToken, getAllAccounts);
+router.get('/:id', authenticateToken, getAccount);
+router.delete('/:id', authenticateToken, deleteAccount);
+router.patch('/add/:id', authenticateToken, addFunds);
+router.post('/withdraw/:id', authenticateToken, withdrawFunds);
 
-// Likusios
-router.get('/', getAllAccounts);
-router.get('/:id', getAccount);
-router.delete('/:id', deleteAccount);
-router.patch('/add/:id', addFunds);
-router.post('/withdraw/:id', withdrawFunds);
+// ✅ Sąskaitos sukūrimas su nuotrauka – BE auth (galima daryti ir su auth)
+router.post('/', upload.single('image'), createAccount);
 
 export default router;

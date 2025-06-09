@@ -1,17 +1,20 @@
-import multer from 'multer';
-import path from 'path';
+import jwt from 'jsonwebtoken';
 
-// Nustatymai: kur saugoti ir kaip pavadinti
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Sukurk aplanką 'uploads' jei jo dar nėra
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + '-' + file.originalname;
-    cb(null, uniqueName);
+export const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token nepridėtas' });
   }
-});
 
-const upload = multer({ storage });
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      console.error("❌ Token neteisingas:", err);
+      return res.status(403).json({ error: 'Token neteisingas' });
+    }
 
-export default upload;
+    req.user = user; // galime naudoti ateity
+    next();
+  });
+};

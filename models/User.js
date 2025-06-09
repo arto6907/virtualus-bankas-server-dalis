@@ -3,19 +3,17 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: [true, 'El. paštas yra privalomas'],
+    required: true,
     unique: true,
     match: [/^\S+@\S+\.\S+$/, 'Neteisingas el. pašto formatas']
   },
   password: {
     type: String,
-    required: [true, 'Slaptažodis yra privalomas'],
-    minlength: [8, 'Slaptažodis turi būti bent 8 simbolių']
+    required: true
   },
-  photo: {
-    type: String,
-    default: null
-  }
+  firstName: String,
+  lastName: String,
+  photo: String
 }, {
   timestamps: true
 });
