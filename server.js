@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import accountsRoutes from './routes/accountsRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import connectDB from './config/db.js';
+import createAdminIfMissing from './config/seedAdmin.js'; // ✅ ← nauja
 
 dotenv.config();
 
@@ -27,8 +28,10 @@ app.use('/api/accounts', accountsRoutes);
 
 // DB connection
 connectDB();
+createAdminIfMissing(); // ✅ ← nauja
 
 // Start server
 app.listen(PORT, () => {
   console.log(`✅ Serveris veikia: http://localhost:${PORT}`);
 });
+

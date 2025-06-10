@@ -18,13 +18,24 @@ export const registerUser = async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: 'Registracija sėkminga' });
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '90h' });
+
+    res.status(201).json({
+      token,
+      user: {
+        email: user.email,
+        userId: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        photo: user.photo || null
+      }
+    });
   } catch (err) {
     console.error('❌ REG klaida:', err);
     res.status(400).json({ error: 'Registracijos klaida' });
   }
 };
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -35,19 +46,21 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: 'Neteisingas slaptažodis' });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '90h' });
 
     res.json({
-      message: 'Prisijungimas sėkmingas',
       token,
-      userId: user._id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      photo: user.photo || null
+      user: {
+        email: user.email,
+        userId: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        photo: user.photo || null
+      }
     });
   } catch (err) {
     console.error('❌ LOGIN klaida:', err);
     res.status(500).json({ error: 'Prisijungimo klaida' });
   }
 };
+
